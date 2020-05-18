@@ -6,6 +6,9 @@ edition = "2018"
 license = "MPL-2.0"
 homepage = "https://github.com/tarikeshaq/configstore"
 repository = "https://github.com/tarikeshaq/configstore"
+readme = "README.md"
+exclude = [".gitignore", ".github/**"]
+documentation = "https://docs.rs/configstore"
 description = "Library to store configurations of applications locally without having to worry about directories or platforms"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
