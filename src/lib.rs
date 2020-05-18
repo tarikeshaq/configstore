@@ -10,12 +10,15 @@ pub struct Configstore {
     prefix_dir: PathBuf,
 }
 
+const CONFIG_STORE_NAME: &str = "configstore-rs";
+
 impl Configstore {
     pub fn new(app_name: &str, app_ui: AppUI) -> Result<Self, Box<dyn std::error::Error>> {
-        let prefix_dir = match AppDirs::new(Some(&app_name), app_ui) {
+        let prefix_dir = match AppDirs::new(Some(CONFIG_STORE_NAME), app_ui) {
             Some(dir) => dir.config_dir,
             None => return Err("Unable to find config directory".into()),
         };
+        let prefix_dir = prefix_dir.join(app_name);
         std::fs::create_dir_all(prefix_dir.clone())?;
 
         Ok(Configstore { prefix_dir })
