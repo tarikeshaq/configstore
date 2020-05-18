@@ -6,6 +6,18 @@ use std::fs::OpenOptions;
 use std::io::BufReader;
 use std::path::PathBuf;
 
+///Configstore store configurations
+/// Will store configuration on your platforms native configuration directory
+/// # Examples
+///
+/// ```
+/// use configstore::{Configstore, AppUI};
+/// 
+/// let config_store = Configstore::new("myApp", AppUI::CommandLine).unwrap();
+/// config_store.set("key", "value".to_string()).unwrap();
+/// let value: String = config_store.get("key").unwrap();
+/// assert_eq!("value".to_string(), value);
+/// ```
 pub struct Configstore {
     prefix_dir: PathBuf,
 }
@@ -13,6 +25,22 @@ pub struct Configstore {
 const CONFIG_STORE_NAME: &str = "configstore-rs";
 
 impl Configstore {
+    /// Creates a new configstore based on a name and a type of ui
+    /// Takes:
+    ///   app_name: &str representing the name of the application
+    ///   app_ui: AppUI (either AppUI::CommandLine or AppUI::Graphical) type of the application
+    /// # Examples
+    ///
+    /// ```
+    /// use configstore::{Configstore, AppUI};
+    /// 
+    /// let command_line_confg = Configstore::new("myApp", AppUI::CommandLine).unwrap();
+    ///```
+    ///
+    /// # Errors
+    ///
+    /// Could error either if your plateform does not have a config directory (All Linux, MacOs and Windows do)
+    /// Or if the application is unable to create the directories for its config files
     pub fn new(app_name: &str, app_ui: AppUI) -> Result<Self, Box<dyn std::error::Error>> {
         let prefix_dir = match AppDirs::new(Some(CONFIG_STORE_NAME), app_ui) {
             Some(dir) => dir.config_dir,
@@ -24,6 +52,32 @@ impl Configstore {
         Ok(Configstore { prefix_dir })
     }
 
+    /// Sets a value in the configstore, to be retrieved at any point in time with get
+    /// Overwrites any existing values with the same key, or creates a new pair
+    /// value is saved as a json file in $CONFIG/configstore-rs/$APPNAME/key.json
+    /// value must implement serde::Serialize and serde::Deserialize
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use serde_derive::*;
+    /// use configstore::{Configstore, AppUI};
+    /// #[derive(Deserialize, Serialize, Eq, PartialEq, Debug, Clone)]
+    /// struct Value {
+    ///     text: String,
+    ///     num: u32
+    /// }
+    ///
+    /// let config_store = Configstore::new("myApp", AppUI::CommandLine).unwrap();
+    /// let value = Value {text: "hello world".to_string(), num: 4343};
+    /// config_store.set("key", value.clone()).unwrap();
+    /// let same_value: Value = config_store.get("key").unwrap();
+    /// assert_eq!(value, same_value);
+    /// ```
+    ///
+    /// # Errors
+    /// Possible errors if config file cannot be oppened, or value cannot be encoded
+    /// into json
     pub fn set<T>(&self, key: &str, value: T) -> Result<(), Box<dyn std::error::Error>>
     where
         T: Serialize + for<'de> Deserialize<'de>,
@@ -40,6 +94,11 @@ impl Configstore {
         Ok(())
     }
 
+    /// Check the set docs for usage
+    /// # Errors
+    /// Could produce errors if unable to open config file
+    /// This could happen if the key was never set or if you manually deleted the file
+    /// Otherwise could cause errors if the type cannot be decoded correctly
     pub fn get<T>(&self, key: &str) -> Result<T, Box<dyn std::error::Error>>
     where
         T: Serialize + for<'de> Deserialize<'de>,
