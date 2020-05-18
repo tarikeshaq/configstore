@@ -12,7 +12,7 @@ use std::path::PathBuf;
 ///
 /// ```
 /// use configstore::{Configstore, AppUI};
-/// 
+///
 /// let config_store = Configstore::new("myApp", AppUI::CommandLine).unwrap();
 /// config_store.set("key", "value".to_string()).unwrap();
 /// let value: String = config_store.get("key").unwrap();
@@ -33,7 +33,7 @@ impl Configstore {
     ///
     /// ```
     /// use configstore::{Configstore, AppUI};
-    /// 
+    ///
     /// let command_line_confg = Configstore::new("myApp", AppUI::CommandLine).unwrap();
     ///```
     ///
