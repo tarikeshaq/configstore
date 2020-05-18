@@ -1,4 +1,4 @@
-# Configstore [![crates.io](https://img.shields.io/crates/v/configstore)](https://crates.io/crates/actix) [![status](https://github.com/tarikeshaq/configstore/workflows/Rust/badge.svg)](https://crates.io/crates/actix)
+# Configstore [![crates.io](https://img.shields.io/crates/v/configstore)](https://crates.io/crates/configstore) [![status](https://github.com/tarikeshaq/configstore/workflows/Rust/badge.svg)](https://crates.io/crates/actix)
 
 Configstore is a library that allows you to store your configurations locally without having to worry about the directories or the platform
 
