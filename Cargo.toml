@@ -3,7 +3,10 @@ name = "configstore"
 version = "0.1.0"
 authors = ["Tarik Eshaq <teshaq@mozilla.com>"]
 edition = "2018"
-
+license = "MPL-2.0"
+homepage = "https://github.com/tarikeshaq/configstore"
+repository = "https://github.com/tarikeshaq/configstore"
+description = "Library to store configurations of applications locally without having to worry about directories or platforms"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
