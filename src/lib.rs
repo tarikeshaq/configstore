@@ -1,3 +1,4 @@
+use anyhow::Result;
 use platform_dirs::AppDirs;
 /// Expose so that consumer can determine the type of the application;
 pub use platform_dirs::AppUI;
@@ -5,7 +6,6 @@ use serde::{Deserialize, Serialize};
 use std::fs::OpenOptions;
 use std::io::BufReader;
 use std::path::PathBuf;
-use anyhow::Result;
 ///Configstore store configurations
 /// Will store configuration on your platforms native configuration directory
 /// # Examples
@@ -99,7 +99,7 @@ impl Configstore {
     /// Could produce errors if unable to open config file
     /// This could happen if the key was never set or if you manually deleted the file
     /// Otherwise could cause errors if the type cannot be decoded correctly
-    pub fn get<T>(&self, key: &str) -> Result<T,>
+    pub fn get<T>(&self, key: &str) -> Result<T>
     where
         T: Serialize + for<'de> Deserialize<'de>,
     {
