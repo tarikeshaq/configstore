@@ -1,3 +1,4 @@
+use anyhow::Result;
 use platform_dirs::AppDirs;
 /// Expose so that consumer can determine the type of the application;
 pub use platform_dirs::AppUI;
@@ -5,7 +6,6 @@ use serde::{Deserialize, Serialize};
 use std::fs::OpenOptions;
 use std::io::BufReader;
 use std::path::PathBuf;
-
 ///Configstore store configurations
 /// Will store configuration on your platforms native configuration directory
 /// # Examples
@@ -41,10 +41,10 @@ impl Configstore {
     ///
     /// Could error either if your plateform does not have a config directory (All Linux, MacOs and Windows do)
     /// Or if the application is unable to create the directories for its config files
-    pub fn new(app_name: &str, app_ui: AppUI) -> Result<Self, Box<dyn std::error::Error>> {
+    pub fn new(app_name: &str, app_ui: AppUI) -> Result<Self> {
         let prefix_dir = match AppDirs::new(Some(CONFIG_STORE_NAME), app_ui) {
             Some(dir) => dir.config_dir,
-            None => return Err("Unable to find config directory".into()),
+            None => return Err(anyhow::Error::msg("Unable to find config directory")),
         };
         let prefix_dir = prefix_dir.join(app_name);
         std::fs::create_dir_all(prefix_dir.clone())?;
@@ -78,7 +78,7 @@ impl Configstore {
     /// # Errors
     /// Possible errors if config file cannot be oppened, or value cannot be encoded
     /// into json
-    pub fn set<T>(&self, key: &str, value: T) -> Result<(), Box<dyn std::error::Error>>
+    pub fn set<T>(&self, key: &str, value: T) -> Result<()>
     where
         T: Serialize + for<'de> Deserialize<'de>,
     {
@@ -99,7 +99,7 @@ impl Configstore {
     /// Could produce errors if unable to open config file
     /// This could happen if the key was never set or if you manually deleted the file
     /// Otherwise could cause errors if the type cannot be decoded correctly
-    pub fn get<T>(&self, key: &str) -> Result<T, Box<dyn std::error::Error>>
+    pub fn get<T>(&self, key: &str) -> Result<T>
     where
         T: Serialize + for<'de> Deserialize<'de>,
     {
