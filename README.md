@@ -11,7 +11,7 @@ To use `configstore`, add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-configstore = "0.1.1"
+configstore = "0.1"
 ```
 
 ### Initialize your Configstore
